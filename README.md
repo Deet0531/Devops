@@ -129,3 +129,4 @@ Java/Spring Boot, Maven, Git, Jenkins, Docker, Ansible, Kubernetes
 - Containerized with a multi-stage Dockerfile and deployed on Kubernetes with 3 replicas, using a Service for routing.
 - Configured server setup using an Ansible playbook with roles and handlers.
 - Added ConfigMap-based configuration, health probes, and demonstrated scaling and rollback.
+# trigger
