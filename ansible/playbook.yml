@@ -1,0 +1,6 @@
+---
+- name: Configure server and deploy Todo API
+  hosts: app_servers
+  become: true
+  roles:
+    - todo_app

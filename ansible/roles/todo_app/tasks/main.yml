@@ -1,0 +1,62 @@
+---
+- name: Install Java runtime (JRE 17)
+  ansible.builtin.apt:
+    name: openjdk-17-jre-headless
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Create application user
+  ansible.builtin.user:
+    name: "{{ app_user }}"
+    system: true
+    shell: /usr/sbin/nologin
+
+- name: Create install directory
+  ansible.builtin.file:
+    path: "{{ app_install_dir }}"
+    state: directory
+    owner: "{{ app_user }}"
+    mode: "0755"
+
+- name: Copy built JAR to the server
+  ansible.builtin.copy:
+    src: "{{ app_jar_src }}"
+    dest: "{{ app_install_dir }}/todo-api.jar"
+    owner: "{{ app_user }}"
+    mode: "0644"
+  notify: Restart todo-api          # handler runs only if the file changed
+
+- name: Install systemd service file
+  ansible.builtin.template:
+    src: todo-api.service.j2
+    dest: /etc/systemd/system/todo-api.service
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart todo-api
+
+- name: Flush handlers so the service file is loaded before starting
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable and start the service
+  ansible.builtin.systemd:
+    name: todo-api
+    enabled: true
+    state: started
+
+- name: Wait for the app port
+  ansible.builtin.wait_for:
+    port: "{{ app_port }}"
+    delay: 5
+    timeout: 90
+
+- name: Verify the API responds
+  ansible.builtin.uri:
+    url: "http://localhost:{{ app_port }}/hello"
+    return_content: true
+  register: api_check
+
+- name: Show API response
+  ansible.builtin.debug:
+    var: api_check.json

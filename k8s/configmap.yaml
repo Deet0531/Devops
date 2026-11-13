@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todo-api-config
+data:
+  SERVER_PORT: "8080"
+  APP_MESSAGE: "Hello from Todo API on Kubernetes"

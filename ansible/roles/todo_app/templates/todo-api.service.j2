@@ -1,0 +1,12 @@
+[Unit]
+Description=Todo API (managed by Ansible)
+After=network.target
+
+[Service]
+User={{ app_user }}
+ExecStart=/usr/bin/java -jar {{ app_install_dir }}/todo-api.jar --server.port={{ app_port }}
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
