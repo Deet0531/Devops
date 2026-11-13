@@ -130,3 +130,4 @@ Java/Spring Boot, Maven, Git, Jenkins, Docker, Ansible, Kubernetes
 - Configured server setup using an Ansible playbook with roles and handlers.
 - Added ConfigMap-based configuration, health probes, and demonstrated scaling and rollback.
 # trigger
+# trigger
